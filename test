@@ -115,7 +115,7 @@ pageAuto.Size = UDim2.new(1,0,1,0)
 pageAuto.BackgroundTransparency = 1
 pageAuto.Visible = false
 -- 🔥 เพิ่ม scroll
-pageAuto.CanvasSize = UDim2.new(0,0,0,500) -- ปรับได้ตามความยาว UI
+pageAuto.CanvasSize = UDim2.new(0,0,0,450) -- ปรับได้ตามความยาว UI
 pageAuto.ScrollBarThickness = 6
 pageAuto.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 pageAuto.ScrollBarImageColor3 = Color3.fromRGB(180,180,180)
