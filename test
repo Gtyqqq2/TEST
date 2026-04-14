@@ -933,27 +933,50 @@ local getATK = createUpgradeToggle("Attack", 220)
 local getSPD = createUpgradeToggle("Speed", 270)
 local getCRT = createUpgradeToggle("Crit", 320)
 
---================ AUTO UPGRADE LOGIC =================--
+--================ AUTO UPGRADE LOGIC (SMART WAIT 10s) =================--
 local upgradeRemote = game:GetService("ReplicatedStorage")
     :WaitForChild("CurRemotes")
     :WaitForChild("DataChange_Points")
 
+local waitMode = false -- 🔴 โหมดรอ 10 วิ
+
 task.spawn(function()
     while true do
+
         if player.Character then
 
-            -- HP
-            if getHP() then
+            -- ถ้าอยู่โหมดรอ → ข้าม
+            if waitMode then
+                task.wait(10)
+                waitMode = false
+                continue
+            end
+
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+
+            local successUpgrade = false -- 🔥 เช็คว่าอัพได้ไหม
+
+            --================ HP =================--
+            if getHP() and humanoid then
+                local before = humanoid.MaxHealth
+
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GHealth"
                     })
                 end)
-                task.wait(0.01)
+
+                task.wait(0.1)
+
+                local after = humanoid.MaxHealth
+
+                if after > before then
+                    successUpgrade = true
+                end
             end
 
-            -- Attack
+            --================ ATTACK =================--
             if getATK() then
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
@@ -961,10 +984,11 @@ task.spawn(function()
                         ["Obj"] = "GDamage"
                     })
                 end)
-                task.wait(0.01)
+                successUpgrade = true
+                task.wait(0.05)
             end
 
-            -- Speed
+            --================ SPEED =================--
             if getSPD() then
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
@@ -972,10 +996,11 @@ task.spawn(function()
                         ["Obj"] = "GSpeed"
                     })
                 end)
-                task.wait(0.01)
+                successUpgrade = true
+                task.wait(0.05)
             end
 
-            -- Crit
+            --================ CRIT =================--
             if getCRT() then
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
@@ -983,11 +1008,18 @@ task.spawn(function()
                         ["Obj"] = "GCriticalHit"
                     })
                 end)
-                task.wait(0.01)
+                successUpgrade = true
+                task.wait(0.05)
+            end
+
+            -- 🔴 ถ้าอัพไม่ได้เลย → เข้าโหมดรอ
+            if not successUpgrade then
+                waitMode = true
             end
 
         end
-        task.wait(0.01)
+
+        task.wait(0.05)
     end
 end)
 
