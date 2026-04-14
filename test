@@ -876,6 +876,63 @@ task.spawn(function()
     end
 end)
 
+--================ AUTO UPGRADE UI =================--
+local upgradeLabel = Instance.new("TextLabel", pageAuto)
+upgradeLabel.Size = UDim2.new(1,0,0,25)
+upgradeLabel.Position = UDim2.new(0,0,0,140)
+upgradeLabel.Text = "auto upgrade"
+upgradeLabel.TextColor3 = Color3.fromRGB(255,255,255)
+upgradeLabel.BackgroundTransparency = 1
+upgradeLabel.Font = Enum.Font.GothamBold
+upgradeLabel.TextSize = 16
+upgradeLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+--================ FUNCTION CREATE =================--
+local function createUpgradeToggle(name, yPos)
+    local frame = Instance.new("Frame", pageAuto)
+    frame.Size = UDim2.new(0.9,0,0,40)
+    frame.Position = UDim2.new(0.05,0,0,yPos)
+    frame.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    Instance.new("UICorner", frame)
+
+    local label = Instance.new("TextLabel", frame)
+    label.Size = UDim2.new(0.7,0,1,0)
+    label.BackgroundTransparency = 1
+    label.Text = name
+    label.TextColor3 = Color3.new(1,1,1)
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 16
+    label.TextXAlignment = Enum.TextXAlignment.Left
+
+    local toggle = Instance.new("TextButton", frame)
+    toggle.Size = UDim2.new(0.3,0,1,0)
+    toggle.Position = UDim2.new(0.7,0,0,0)
+    toggle.Text = "OFF"
+    toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+    toggle.TextColor3 = Color3.new(1,1,1)
+    toggle.Font = Enum.Font.GothamBold
+    toggle.TextSize = 14
+    Instance.new("UICorner", toggle)
+
+    local state = false
+
+    toggle.MouseButton1Click:Connect(function()
+        state = not state
+        toggle.Text = state and "ON" or "OFF"
+        toggle.BackgroundColor3 = state and Color3.fromRGB(255,0,0) or Color3.fromRGB(100,100,100)
+    end)
+
+    return function()
+        return state
+    end
+end
+
+--================ CREATE 4 TOGGLES =================--
+local getHP = createUpgradeToggle("HP", 170)
+local getATK = createUpgradeToggle("Attack", 220)
+local getSPD = createUpgradeToggle("Speed", 270)
+local getCRT = createUpgradeToggle("Crit", 320)
+
 --================ REMOVE EFFECTS UI =================--
 local effectFrame = Instance.new("Frame", pageSetting)
 effectFrame.Size = UDim2.new(0.9,0,0,40)
