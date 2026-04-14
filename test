@@ -950,7 +950,7 @@ task.spawn(function()
                         ["Obj"] = "GHealth"
                     })
                 end)
-                task.wait(0.1)
+                task.wait(0.01)
             end
 
             -- Attack
@@ -961,7 +961,7 @@ task.spawn(function()
                         ["Obj"] = "GDamage"
                     })
                 end)
-                task.wait(0.1)
+                task.wait(0.01)
             end
 
             -- Speed
@@ -972,7 +972,7 @@ task.spawn(function()
                         ["Obj"] = "GSpeed"
                     })
                 end)
-                task.wait(0.1)
+                task.wait(0.01)
             end
 
             -- Crit
@@ -983,11 +983,11 @@ task.spawn(function()
                         ["Obj"] = "GCriticalHit"
                     })
                 end)
-                task.wait(0.1)
+                task.wait(0.01)
             end
 
         end
-        task.wait(0.05)
+        task.wait(0.01)
     end
 end)
 
