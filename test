@@ -933,6 +933,64 @@ local getATK = createUpgradeToggle("Attack", 220)
 local getSPD = createUpgradeToggle("Speed", 270)
 local getCRT = createUpgradeToggle("Crit", 320)
 
+--================ AUTO UPGRADE LOGIC =================--
+local upgradeRemote = game:GetService("ReplicatedStorage")
+    :WaitForChild("CurRemotes")
+    :WaitForChild("DataChange_Points")
+
+task.spawn(function()
+    while true do
+        if player.Character then
+
+            -- HP
+            if getHP() then
+                pcall(function()
+                    upgradeRemote:FireServer("ClickPoints", {
+                        ["Points"] = 1,
+                        ["Obj"] = "GHealth"
+                    })
+                end)
+                task.wait(0.1)
+            end
+
+            -- Attack
+            if getATK() then
+                pcall(function()
+                    upgradeRemote:FireServer("ClickPoints", {
+                        ["Points"] = 1,
+                        ["Obj"] = "GDamage"
+                    })
+                end)
+                task.wait(0.1)
+            end
+
+            -- Speed
+            if getSPD() then
+                pcall(function()
+                    upgradeRemote:FireServer("ClickPoints", {
+                        ["Points"] = 1,
+                        ["Obj"] = "GSpeed"
+                    })
+                end)
+                task.wait(0.1)
+            end
+
+            -- Crit
+            if getCRT() then
+                pcall(function()
+                    upgradeRemote:FireServer("ClickPoints", {
+                        ["Points"] = 1,
+                        ["Obj"] = "GCriticalHit"
+                    })
+                end)
+                task.wait(0.1)
+            end
+
+        end
+        task.wait(0.05)
+    end
+end)
+
 --================ REMOVE EFFECTS UI =================--
 local effectFrame = Instance.new("Frame", pageSetting)
 effectFrame.Size = UDim2.new(0.9,0,0,40)
