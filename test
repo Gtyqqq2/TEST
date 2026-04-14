@@ -938,18 +938,9 @@ local upgradeRemote = game:GetService("ReplicatedStorage")
     :WaitForChild("CurRemotes")
     :WaitForChild("DataChange_Points")
 
--- 🔥 เช็คว่าเหลือแต้มไหม
-local function hasPoints()
-    local data = player:FindFirstChild("Data")
-    if data and data:FindFirstChild("Points") then
-        return data.Points.Value > 0
-    end
-    return false
-end
-
 task.spawn(function()
     while true do
-        if player.Character and hasPoints() then
+        if player.Character then
 
             -- HP
             if getHP() then
@@ -996,7 +987,7 @@ task.spawn(function()
             end
 
         end
-        task.wait(0.05) -- 🔥 กันลูปยิงมั่วตอนแต้มหมด
+        task.wait(0.01)
     end
 end)
 
