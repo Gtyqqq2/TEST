@@ -1079,13 +1079,13 @@ effectToggle.Font = Enum.Font.GothamBold
 effectToggle.TextSize = 14
 Instance.new("UICorner", effectToggle)
 
---================ EFFECT + NOTIFICATION REMOVER =================--
+--================ EFFECT + SAFE NOTIFICATION REMOVER =================--
 local effectEnabled = false
 local player = game.Players.LocalPlayer
 
 local function cleanObject(obj)
 
-    -- 🔥 ลบเอฟเฟค (เหมือนเดิม)
+    -- 🔥 ลบเอฟเฟค
     if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
         obj.Enabled = false
     end
@@ -1094,21 +1094,32 @@ local function cleanObject(obj)
         obj.Enabled = false
     end
 
-    -- 🔥 ลบข้อความแจ้งเตือน (บนจอ)
+    -- 🔥 ลบเฉพาะ Notification GUI
     if obj:IsA("ScreenGui") then
-        if string.find(obj.Name:lower(), "notify")
-        or string.find(obj.Name:lower(), "alert")
-        or string.find(obj.Name:lower(), "message") then
+        local name = obj.Name:lower()
+
+        if string.find(name, "notify")
+        or string.find(name, "alert")
+        or string.find(name, "message") then
             obj.Enabled = false
         end
     end
 
+    -- 🔥 ลบเฉพาะข้อความที่ “น่าจะเป็นแจ้งเตือน”
     if obj:IsA("TextLabel") then
-        obj.Visible = false
+        local text = obj.Text:lower()
+
+        if string.find(text, "+")
+        or string.find(text, "damage")
+        or string.find(text, "exp")
+        or string.find(text, "coin")
+        or string.find(text, "reward") then
+            obj.Visible = false
+        end
     end
 end
 
--- 🔥 ของใหม่ (workspace)
+-- workspace
 workspace.DescendantAdded:Connect(function(desc)
     if effectEnabled then
         task.spawn(function()
@@ -1118,7 +1129,7 @@ workspace.DescendantAdded:Connect(function(desc)
     end
 end)
 
--- 🔥 ของใหม่ (UI)
+-- UI
 player.PlayerGui.DescendantAdded:Connect(function(desc)
     if effectEnabled then
         task.spawn(function()
@@ -1128,27 +1139,25 @@ player.PlayerGui.DescendantAdded:Connect(function(desc)
     end
 end)
 
--- 🔥 ยิงลบซ้ำ กันหลุด
+-- loop กันหลุด
 task.spawn(function()
     while true do
         if effectEnabled then
-            -- 🌍 ลบเอฟเฟคในแมพ
             for _, obj in pairs(workspace:GetDescendants()) do
                 cleanObject(obj)
             end
 
-            -- 🖥 ลบ UI
             if player:FindFirstChild("PlayerGui") then
                 for _, obj in pairs(player.PlayerGui:GetDescendants()) do
                     cleanObject(obj)
                 end
             end
         end
-        task.wait(0.3)
+        task.wait(0.5)
     end
 end)
 
--- 🔥 Toggle
+-- toggle
 effectToggle.MouseButton1Click:Connect(function()
     effectEnabled = not effectEnabled
     effectToggle.Text = effectEnabled and "ON" or "OFF"
