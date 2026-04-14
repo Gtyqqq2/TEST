@@ -933,32 +933,30 @@ local getATK = createUpgradeToggle("Attack", 220)
 local getSPD = createUpgradeToggle("Speed", 270)
 local getCRT = createUpgradeToggle("Crit", 320)
 
---================ AUTO UPGRADE LOGIC (SMART WAIT 10s) =================--
+--================ AUTO UPGRADE SMART =================--
 local upgradeRemote = game:GetService("ReplicatedStorage")
     :WaitForChild("CurRemotes")
     :WaitForChild("DataChange_Points")
 
-local waitMode = false -- 🔴 โหมดรอ 10 วิ
+-- 🔍 ฟังก์ชันหาค่า stat
+local function getStat(name)
+    for _,v in pairs(player:GetDescendants()) do
+        if v:IsA("IntValue") and v.Name == name then
+            return v
+        end
+    end
+end
 
 task.spawn(function()
     while true do
-
         if player.Character then
 
-            -- ถ้าอยู่โหมดรอ → ข้าม
-            if waitMode then
-                task.wait(10)
-                waitMode = false
-                continue
-            end
+            local success = false -- 🔥 เช็คว่ามีการอัพสำเร็จไหม
 
-            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-
-            local successUpgrade = false -- 🔥 เช็คว่าอัพได้ไหม
-
-            --================ HP =================--
-            if getHP() and humanoid then
-                local before = humanoid.MaxHealth
+            -- HP
+            if getHP() then
+                local stat = getStat("GHealth")
+                local before = stat and stat.Value
 
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
@@ -967,59 +965,78 @@ task.spawn(function()
                     })
                 end)
 
-                task.wait(0.1)
+                task.wait(0.2)
 
-                local after = humanoid.MaxHealth
-
-                if after > before then
-                    successUpgrade = true
+                if stat and stat.Value ~= before then
+                    success = true
                 end
             end
 
-            --================ ATTACK =================--
+            -- Attack
             if getATK() then
+                local stat = getStat("GDamage")
+                local before = stat and stat.Value
+
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GDamage"
                     })
                 end)
-                successUpgrade = true
-                task.wait(0.05)
+
+                task.wait(0.2)
+
+                if stat and stat.Value ~= before then
+                    success = true
+                end
             end
 
-            --================ SPEED =================--
+            -- Speed
             if getSPD() then
+                local stat = getStat("GSpeed")
+                local before = stat and stat.Value
+
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GSpeed"
                     })
                 end)
-                successUpgrade = true
-                task.wait(0.05)
+
+                task.wait(0.2)
+
+                if stat and stat.Value ~= before then
+                    success = true
+                end
             end
 
-            --================ CRIT =================--
+            -- Crit
             if getCRT() then
+                local stat = getStat("GCriticalHit")
+                local before = stat and stat.Value
+
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GCriticalHit"
                     })
                 end)
-                successUpgrade = true
-                task.wait(0.05)
+
+                task.wait(0.2)
+
+                if stat and stat.Value ~= before then
+                    success = true
+                end
             end
 
-            -- 🔴 ถ้าอัพไม่ได้เลย → เข้าโหมดรอ
-            if not successUpgrade then
-                waitMode = true
+            -- 🔥 ถ้าไม่มีอะไรอัพได้ = point หมด
+            if not success then
+                task.wait(10) -- ⏳ รอ 10 วิ
             end
 
         end
 
-        task.wait(0.05)
+        task.wait(0.1)
     end
 end)
 
