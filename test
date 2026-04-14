@@ -1083,17 +1083,43 @@ Instance.new("UICorner", effectToggle)
 local effectEnabled = false
 
 local function removeEffectFromPart(obj)
+    -- 🔥 ปิดเอฟเฟค
     if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
         obj.Enabled = false
     end
+
+    -- 🔥 ปิดพวกแสง/เอฟเฟคอื่น
+    if obj:IsA("PointLight") or obj:IsA("SpotLight") then
+        obj.Enabled = false
+    end
+
+    -- 🔥 ลบข้อความลอย (ดาเมจ / แจ้งเตือน)
+    if obj:IsA("BillboardGui") or obj:IsA("SurfaceGui") then
+        obj.Enabled = false
+    end
+
+    -- 🔥 ลบ Text บนหน้าจอ
+    if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+        obj.Visible = false
+    end
 end
 
--- ใช้ DescendantAdded เพื่อปิดเอฟเฟคใหม่แบบเรียลไทม์
+-- ใช้ DescendantAdded เพื่อปิดของใหม่ทันที
 workspace.DescendantAdded:Connect(function(desc)
     if effectEnabled then
         removeEffectFromPart(desc)
     end
 end)
+
+-- 🔥 UI (PlayerGui ด้วย)
+local function cleanUI()
+    local player = game.Players.LocalPlayer
+    if player and player:FindFirstChild("PlayerGui") then
+        for _, obj in pairs(player.PlayerGui:GetDescendants()) do
+            removeEffectFromPart(obj)
+        end
+    end
+end
 
 effectToggle.MouseButton1Click:Connect(function()
     effectEnabled = not effectEnabled
@@ -1101,14 +1127,21 @@ effectToggle.MouseButton1Click:Connect(function()
     effectToggle.BackgroundColor3 = effectEnabled and Color3.fromRGB(255,0,0) or Color3.fromRGB(100,100,100)
 
     if effectEnabled then
-        -- ปิดเอฟเฟคชิ้นส่วนทั้งหมดปัจจุบัน
+        -- 🔥 ปิดเอฟเฟคในโลก
         for _, obj in pairs(workspace:GetDescendants()) do
             removeEffectFromPart(obj)
         end
+
+        -- 🔥 ปิด UI (สำคัญมาก)
+        cleanUI()
     else
-        -- หากต้องการเปิดเอฟเฟคคืน
+        -- 🔥 เปิดคืนเฉพาะเอฟเฟค (UI ไม่ต้องเปิดคืน = โล่งต่อ)
         for _, obj in pairs(workspace:GetDescendants()) do
             if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
+                obj.Enabled = true
+            end
+
+            if obj:IsA("PointLight") or obj:IsA("SpotLight") then
                 obj.Enabled = true
             end
         end
