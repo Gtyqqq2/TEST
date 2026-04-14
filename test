@@ -115,7 +115,7 @@ pageAuto.Size = UDim2.new(1,0,1,0)
 pageAuto.BackgroundTransparency = 1
 pageAuto.Visible = false
 -- 🔥 เพิ่ม scroll
-pageAuto.CanvasSize = UDim2.new(0,0,0,400) -- ปรับได้ตามความยาว UI
+pageAuto.CanvasSize = UDim2.new(0,0,0,500) -- ปรับได้ตามความยาว UI
 pageAuto.ScrollBarThickness = 6
 pageAuto.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 pageAuto.ScrollBarImageColor3 = Color3.fromRGB(180,180,180)
@@ -988,6 +988,68 @@ task.spawn(function()
 
         end
         task.wait(0.01)
+    end
+end)
+
+--================ REBIRTH UI (APPEND MODE) =================--
+local rebirthLabel = Instance.new("TextLabel", pageAuto)
+rebirthLabel.Size = UDim2.new(1,0,0,25)
+rebirthLabel.Position = UDim2.new(0,0,0,370)
+rebirthLabel.Text = "rebirth"
+rebirthLabel.TextColor3 = Color3.fromRGB(255,255,255)
+rebirthLabel.BackgroundTransparency = 1
+rebirthLabel.Font = Enum.Font.GothamBold
+rebirthLabel.TextSize = 16
+rebirthLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+local rebirthFrame = Instance.new("Frame", pageAuto)
+rebirthFrame.Size = UDim2.new(0.9,0,0,40)
+rebirthFrame.Position = UDim2.new(0.05,0,0,400)
+rebirthFrame.BackgroundColor3 = Color3.fromRGB(50,50,50)
+Instance.new("UICorner", rebirthFrame)
+
+local rebirthText = Instance.new("TextLabel", rebirthFrame)
+rebirthText.Size = UDim2.new(0.7,0,1,0)
+rebirthText.BackgroundTransparency = 1
+rebirthText.Text = "rebirth"
+rebirthText.TextColor3 = Color3.new(1,1,1)
+rebirthText.Font = Enum.Font.GothamBold
+rebirthText.TextSize = 16
+rebirthText.TextXAlignment = Enum.TextXAlignment.Left
+
+local rebirthToggle = Instance.new("TextButton", rebirthFrame)
+rebirthToggle.Size = UDim2.new(0.3,0,1,0)
+rebirthToggle.Position = UDim2.new(0.7,0,0,0)
+rebirthToggle.Text = "OFF"
+rebirthToggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+rebirthToggle.TextColor3 = Color3.new(1,1,1)
+rebirthToggle.Font = Enum.Font.GothamBold
+rebirthToggle.TextSize = 14
+Instance.new("UICorner", rebirthToggle)
+
+local rebirthEnabled = false
+
+rebirthToggle.MouseButton1Click:Connect(function()
+    rebirthEnabled = not rebirthEnabled
+    rebirthToggle.Text = rebirthEnabled and "ON" or "OFF"
+    rebirthToggle.BackgroundColor3 = rebirthEnabled and Color3.fromRGB(255,0,0) or Color3.fromRGB(100,100,100)
+end)
+
+--================ REBIRTH LOOP =================--
+local rebirthRemote = game:GetService("ReplicatedStorage")
+    :WaitForChild("CurRemotes")
+    :WaitForChild("DataChange_Rebirth")
+
+task.spawn(function()
+    while true do
+        if rebirthEnabled and player.Character then
+            pcall(function()
+                rebirthRemote:FireServer("rebirth")
+            end)
+            task.wait(5)
+        else
+            task.wait(0.2)
+        end
     end
 end)
 
