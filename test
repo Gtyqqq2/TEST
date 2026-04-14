@@ -96,21 +96,31 @@ pageMain.Size = UDim2.new(1,0,1,0)
 pageMain.BackgroundTransparency = 1
 pageMain.Visible = true
 
+
 -- 🔽 หน้าเดิม
 local pageAura = Instance.new("Frame", pages)
 pageAura.Size = UDim2.new(1,0,1,0)
 pageAura.BackgroundTransparency = 1
 pageAura.Visible = false
 
+
 local pageTeleport = Instance.new("Frame", pages)
 pageTeleport.Size = UDim2.new(1,0,1,0)
 pageTeleport.BackgroundTransparency = 1
 pageTeleport.Visible = false
 
-local pageAuto = Instance.new("Frame", pages)
+
+local pageAuto = Instance.new("ScrollingFrame", pages)
 pageAuto.Size = UDim2.new(1,0,1,0)
 pageAuto.BackgroundTransparency = 1
 pageAuto.Visible = false
+
+-- 🔥 เพิ่ม scroll
+pageAuto.CanvasSize = UDim2.new(0,0,0,400) -- ปรับได้ตามความยาว UI
+pageAuto.ScrollBarThickness = 6
+pageAuto.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
+pageAuto.ScrollBarImageColor3 = Color3.fromRGB(180,180,180)
+
 
 local pageSetting = Instance.new("Frame", pages)
 pageSetting.Size = UDim2.new(1,0,1,0)
