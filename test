@@ -1079,40 +1079,80 @@ effectToggle.Font = Enum.Font.GothamBold
 effectToggle.TextSize = 14
 Instance.new("UICorner", effectToggle)
 
---================ EFFECTS FUNCTION =================--
+--================ EFFECT + NOTIFICATION REMOVER =================--
 local effectEnabled = false
+local player = game.Players.LocalPlayer
 
-local function removeEffectFromPart(obj)
+local function cleanObject(obj)
+
+    -- 🔥 ลบเอฟเฟค (เหมือนเดิม)
     if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
         obj.Enabled = false
     end
+
+    if obj:IsA("PointLight") or obj:IsA("SpotLight") then
+        obj.Enabled = false
+    end
+
+    -- 🔥 ลบข้อความแจ้งเตือน (บนจอ)
+    if obj:IsA("ScreenGui") then
+        if string.find(obj.Name:lower(), "notify")
+        or string.find(obj.Name:lower(), "alert")
+        or string.find(obj.Name:lower(), "message") then
+            obj.Enabled = false
+        end
+    end
+
+    if obj:IsA("TextLabel") then
+        obj.Visible = false
+    end
 end
 
--- ใช้ DescendantAdded เพื่อปิดเอฟเฟคใหม่แบบเรียลไทม์
+-- 🔥 ของใหม่ (workspace)
 workspace.DescendantAdded:Connect(function(desc)
     if effectEnabled then
-        removeEffectFromPart(desc)
+        task.spawn(function()
+            task.wait()
+            cleanObject(desc)
+        end)
     end
 end)
 
+-- 🔥 ของใหม่ (UI)
+player.PlayerGui.DescendantAdded:Connect(function(desc)
+    if effectEnabled then
+        task.spawn(function()
+            task.wait()
+            cleanObject(desc)
+        end)
+    end
+end)
+
+-- 🔥 ยิงลบซ้ำ กันหลุด
+task.spawn(function()
+    while true do
+        if effectEnabled then
+            -- 🌍 ลบเอฟเฟคในแมพ
+            for _, obj in pairs(workspace:GetDescendants()) do
+                cleanObject(obj)
+            end
+
+            -- 🖥 ลบ UI
+            if player:FindFirstChild("PlayerGui") then
+                for _, obj in pairs(player.PlayerGui:GetDescendants()) do
+                    cleanObject(obj)
+                end
+            end
+        end
+        task.wait(0.3)
+    end
+end)
+
+-- 🔥 Toggle
 effectToggle.MouseButton1Click:Connect(function()
     effectEnabled = not effectEnabled
     effectToggle.Text = effectEnabled and "ON" or "OFF"
     effectToggle.BackgroundColor3 = effectEnabled and Color3.fromRGB(255,0,0) or Color3.fromRGB(100,100,100)
-
-    if effectEnabled then
-        -- ปิดเอฟเฟคชิ้นส่วนทั้งหมดปัจจุบัน
-        for _, obj in pairs(workspace:GetDescendants()) do
-            removeEffectFromPart(obj)
-        end
-    else
-        -- หากต้องการเปิดเอฟเฟคคืน
-        for _, obj in pairs(workspace:GetDescendants()) do
-            if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
-                obj.Enabled = true
-            end
-        end
-    end
 end)
 
 -- ================= Smooth Graphics UI =================
