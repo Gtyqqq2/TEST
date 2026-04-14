@@ -933,110 +933,61 @@ local getATK = createUpgradeToggle("Attack", 220)
 local getSPD = createUpgradeToggle("Speed", 270)
 local getCRT = createUpgradeToggle("Crit", 320)
 
---================ AUTO UPGRADE SMART =================--
+--================ AUTO UPGRADE LOGIC =================--
 local upgradeRemote = game:GetService("ReplicatedStorage")
     :WaitForChild("CurRemotes")
     :WaitForChild("DataChange_Points")
-
--- 🔍 ฟังก์ชันหาค่า stat
-local function getStat(name)
-    for _,v in pairs(player:GetDescendants()) do
-        if v:IsA("IntValue") and v.Name == name then
-            return v
-        end
-    end
-end
 
 task.spawn(function()
     while true do
         if player.Character then
 
-            local success = false -- 🔥 เช็คว่ามีการอัพสำเร็จไหม
-
             -- HP
             if getHP() then
-                local stat = getStat("GHealth")
-                local before = stat and stat.Value
-
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GHealth"
                     })
                 end)
-
-                task.wait(0.2)
-
-                if stat and stat.Value ~= before then
-                    success = true
-                end
+                task.wait(0.01)
             end
 
             -- Attack
             if getATK() then
-                local stat = getStat("GDamage")
-                local before = stat and stat.Value
-
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GDamage"
                     })
                 end)
-
-                task.wait(0.2)
-
-                if stat and stat.Value ~= before then
-                    success = true
-                end
+                task.wait(0.01)
             end
 
             -- Speed
             if getSPD() then
-                local stat = getStat("GSpeed")
-                local before = stat and stat.Value
-
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GSpeed"
                     })
                 end)
-
-                task.wait(0.2)
-
-                if stat and stat.Value ~= before then
-                    success = true
-                end
+                task.wait(0.01)
             end
 
             -- Crit
             if getCRT() then
-                local stat = getStat("GCriticalHit")
-                local before = stat and stat.Value
-
                 pcall(function()
                     upgradeRemote:FireServer("ClickPoints", {
                         ["Points"] = 1,
                         ["Obj"] = "GCriticalHit"
                     })
                 end)
-
-                task.wait(0.2)
-
-                if stat and stat.Value ~= before then
-                    success = true
-                end
-            end
-
-            -- 🔥 ถ้าไม่มีอะไรอัพได้ = point หมด
-            if not success then
-                task.wait(10) -- ⏳ รอ 10 วิ
+                task.wait(0.01)
             end
 
         end
-
-        task.wait(0.1)
+        task.wait(0.01)
     end
 end)
 
