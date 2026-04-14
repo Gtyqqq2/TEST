@@ -54,7 +54,7 @@ menu.BackgroundColor3 = Color3.fromRGB(25,25,25)
 menu.BackgroundTransparency = 0.2
 Instance.new("UICorner", menu)
 
-menu.CanvasSize = UDim2.new(0,0,0,300) -- 🔥 เพิ่มความสูงรองรับปุ่มใหม่
+menu.CanvasSize = UDim2.new(0,0,0,290) -- 🔥 เพิ่มความสูงรองรับปุ่มใหม่
 menu.ScrollBarThickness = 6
 menu.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 menu.ScrollBarImageColor3 = Color3.fromRGB(180,180,180)
