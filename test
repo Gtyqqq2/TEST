@@ -114,7 +114,6 @@ local pageAuto = Instance.new("ScrollingFrame", pages)
 pageAuto.Size = UDim2.new(1,0,1,0)
 pageAuto.BackgroundTransparency = 1
 pageAuto.Visible = false
-
 -- 🔥 เพิ่ม scroll
 pageAuto.CanvasSize = UDim2.new(0,0,0,400) -- ปรับได้ตามความยาว UI
 pageAuto.ScrollBarThickness = 6
@@ -876,6 +875,59 @@ task.spawn(function()
         task.wait(0.01)
     end
 end)
+
+--================ AUTO UPGRADE UI =================--
+local upgradeLabel = Instance.new("TextLabel", pageAuto)
+upgradeLabel.Size = UDim2.new(1,0,0,25)
+upgradeLabel.Position = UDim2.new(0,0,0,140) -- 🔥 ใต้ cooldown
+upgradeLabel.Text = "auto upgrade"
+upgradeLabel.TextColor3 = Color3.fromRGB(255,255,255)
+upgradeLabel.BackgroundTransparency = 1
+upgradeLabel.Font = Enum.Font.GothamBold
+upgradeLabel.TextSize = 16
+upgradeLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+--================ UPGRADE FRAME =================--
+local upgradeFrame = Instance.new("Frame", pageAuto)
+upgradeFrame.Size = UDim2.new(0.9,0,0,140)
+upgradeFrame.Position = UDim2.new(0.05,0,0,170)
+upgradeFrame.BackgroundColor3 = Color3.fromRGB(50,50,50)
+Instance.new("UICorner", upgradeFrame)
+
+--================ TOGGLE =================--
+local upgradeToggle = Instance.new("TextButton", upgradeFrame)
+upgradeToggle.Size = UDim2.new(0.3,0,0,30)
+upgradeToggle.Position = UDim2.new(0.7,0,0,5)
+upgradeToggle.Text = "OFF"
+upgradeToggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+upgradeToggle.TextColor3 = Color3.new(1,1,1)
+upgradeToggle.Font = Enum.Font.GothamBold
+upgradeToggle.TextSize = 14
+Instance.new("UICorner", upgradeToggle)
+
+local upgradeEnabled = false
+
+upgradeToggle.MouseButton1Click:Connect(function()
+    upgradeEnabled = not upgradeEnabled
+    upgradeToggle.Text = upgradeEnabled and "ON" or "OFF"
+    upgradeToggle.BackgroundColor3 = upgradeEnabled and Color3.fromRGB(255,0,0) or Color3.fromRGB(100,100,100)
+end)
+
+--================ LABEL LIST =================--
+local stats = {"HP","Attack","Speed","Crit"}
+
+for i, name in ipairs(stats) do
+    local txt = Instance.new("TextLabel", upgradeFrame)
+    txt.Size = UDim2.new(1,-10,0,25)
+    txt.Position = UDim2.new(0,10,0,30 + (i-1)*25)
+    txt.BackgroundTransparency = 1
+    txt.Text = name
+    txt.TextColor3 = Color3.fromRGB(255,255,255)
+    txt.Font = Enum.Font.Gotham
+    txt.TextSize = 14
+    txt.TextXAlignment = Enum.TextXAlignment.Left
+end
+
 --================ REMOVE EFFECTS UI =================--
 local effectFrame = Instance.new("Frame", pageSetting)
 effectFrame.Size = UDim2.new(0.9,0,0,40)
