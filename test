@@ -938,8 +938,8 @@ local upgradeRemote = game:GetService("ReplicatedStorage")
     :WaitForChild("CurRemotes")
     :WaitForChild("DataChange_Points")
 
---================ POINT OBJECT =================--
-local pointObj = player.PlayerGui
+--================ POINT =================--
+local point = player.PlayerGui
     :WaitForChild("MainGui")
     :WaitForChild("MainFrame")
     :WaitForChild("MenuFrame")
@@ -947,41 +947,78 @@ local pointObj = player.PlayerGui
     :WaitForChild("New")
     :WaitForChild("data")
 
+--================ UI =================--
+local gui = Instance.new("ScreenGui", game.CoreGui)
+
+local frame = Instance.new("Frame", gui)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Position = UDim2.new(0.2, 0, 0.2, 0)
+frame.Size = UDim2.new(0.15, 0, 0.07, 0)
+frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+
+local text = Instance.new("TextLabel", frame)
+text.Size = UDim2.new(1,0,1,0)
+text.BackgroundTransparency = 1
+text.TextColor3 = Color3.fromRGB(0,255,100)
+text.TextScaled = true
+
 --================ GET POINT =================--
 local function getPoint()
-    return pointObj.Value or tonumber(pointObj.Text) or 0
+    local val = 0
+
+    pcall(function()
+        if point:IsA("TextLabel") then
+            val = tonumber(point.Text) or 0
+        else
+            val = tonumber(point.Value) or 0
+        end
+    end)
+
+    return val
 end
 
---================ AUTO UPGRADE (STOP/RESUME) =================--
+--================ UPDATE UI =================--
+local function updateUI()
+    text.Text = "Point: "..getPoint()
+end
+
+updateUI()
+
+if point:IsA("TextLabel") then
+    point:GetPropertyChangedSignal("Text"):Connect(updateUI)
+else
+    point:GetPropertyChangedSignal("Value"):Connect(updateUI)
+end
+
+--================ AUTO UPGRADE =================--
 task.spawn(function()
     while true do
 
-        -- 🔴 รอจนกว่าจะมี point
-        repeat
+        local p = getPoint()
+
+        -- 🔴 หยุดจริง (≤ 1)
+        if p <= 1 then
             task.wait(0.2)
-        until getPoint() > 0
-
-        -- 🟢 เริ่มทำงานเมื่อมีแต้ม
-        while getPoint() > 0 do
-
+        else
+            -- 🟢 ทำงานเมื่อ > 1 เท่านั้น
             if player.Character then
 
-                if getHP() then
+                if getHP() and getPoint() > 1 then
                     upgradeRemote:FireServer("ClickPoints", {Points = 1, Obj = "GHealth"})
                     task.wait(0.01)
                 end
 
-                if getATK() then
+                if getATK() and getPoint() > 1 then
                     upgradeRemote:FireServer("ClickPoints", {Points = 1, Obj = "GDamage"})
                     task.wait(0.01)
                 end
 
-                if getSPD() then
+                if getSPD() and getPoint() > 1 then
                     upgradeRemote:FireServer("ClickPoints", {Points = 1, Obj = "GSpeed"})
                     task.wait(0.01)
                 end
 
-                if getCRT() then
+                if getCRT() and getPoint() > 1 then
                     upgradeRemote:FireServer("ClickPoints", {Points = 1, Obj = "GCriticalHit"})
                     task.wait(0.01)
                 end
@@ -990,8 +1027,6 @@ task.spawn(function()
 
             task.wait(0.01)
         end
-
-        -- 🔁 พอ point = 0 จะหลุดออกมา แล้วกลับไปรอใหม่อัตโนมัติ
 
     end
 end)
