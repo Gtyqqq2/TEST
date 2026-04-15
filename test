@@ -947,21 +947,6 @@ local point = player.PlayerGui
     :WaitForChild("New")
     :WaitForChild("data")
 
---================ UI =================--
-local gui = Instance.new("ScreenGui", game.CoreGui)
-
-local frame = Instance.new("Frame", gui)
-frame.AnchorPoint = Vector2.new(0.5, 0.5)
-frame.Position = UDim2.new(0.2, 0, 0.2, 0)
-frame.Size = UDim2.new(0.15, 0, 0.07, 0)
-frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
-
-local text = Instance.new("TextLabel", frame)
-text.Size = UDim2.new(1,0,1,0)
-text.BackgroundTransparency = 1
-text.TextColor3 = Color3.fromRGB(0,255,100)
-text.TextScaled = true
-
 --================ GET POINT =================--
 local function getPoint()
     local val = 0
@@ -977,30 +962,13 @@ local function getPoint()
     return val
 end
 
---================ UPDATE UI =================--
-local function updateUI()
-    text.Text = "Point: "..getPoint()
-end
-
-updateUI()
-
-if point:IsA("TextLabel") then
-    point:GetPropertyChangedSignal("Text"):Connect(updateUI)
-else
-    point:GetPropertyChangedSignal("Value"):Connect(updateUI)
-end
-
 --================ AUTO UPGRADE =================--
 task.spawn(function()
     while true do
 
         local p = getPoint()
 
-        -- 🔴 หยุดจริง (≤ 1)
-        if p <= 1 then
-            task.wait(0.2)
-        else
-            -- 🟢 ทำงานเมื่อ > 1 เท่านั้น
+        if p > 1 then
             if player.Character then
 
                 if getHP() and getPoint() > 1 then
@@ -1024,10 +992,11 @@ task.spawn(function()
                 end
 
             end
-
-            task.wait(0.01)
+        else
+            task.wait(0.2)
         end
 
+        task.wait(0.01)
     end
 end)
 
