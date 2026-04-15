@@ -962,11 +962,16 @@ local function getPoint()
     return val
 end
 
---================ AUTO UPGRADE =================--
 task.spawn(function()
     while true do
 
         local p = getPoint()
+
+        -- ❗ สำคัญ: ถ้าไม่มี toggle ไหนเปิดเลย = ไม่ทำงาน
+        if not (getHP() or getATK() or getSPD() or getCRT()) then
+            task.wait(0.2)
+            continue
+        end
 
         if p > 1 then
             -- 🟢 อัปปกติ
@@ -995,20 +1000,20 @@ task.spawn(function()
             end
 
         elseif p == 1 then
-            -- 🔥 เหลือ 1 → อัปต่ออีก 1 วิ
+            -- 🔥 เหลือ 1 → อัปต่ออีก 1 วิ (เฉพาะตอนมี toggle เปิด)
             local start = tick()
 
             while tick() - start < 1 do
+                if not (getHP() or getATK() or getSPD() or getCRT()) then break end
+
                 if player.Character then
-                    pcall(function()
-                        upgradeRemote:FireServer("ClickPoints", {Points = 1, Obj = "GHealth"})
-                    end)
+                    upgradeRemote:FireServer("ClickPoints", {Points = 1, Obj = "GHealth"})
                 end
+
                 task.wait(0.05)
             end
 
         else
-            -- 🔴 0 → หยุด
             task.wait(0.2)
         end
 
