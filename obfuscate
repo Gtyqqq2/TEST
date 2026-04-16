@@ -629,7 +629,7 @@ task.spawn(function()
         if pullEnabled and hrp then
             local now = tick()
 
-            if now - lastUpdate >= 0.5 then
+            if now - lastUpdate >= 2 then
                 lastUpdate = now
                 local newList = {}
 
