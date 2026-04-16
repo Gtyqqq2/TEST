@@ -316,7 +316,7 @@ task.spawn(function()
         if enabled then
             updateMonsters()
         end
-        task.wait(1.5)
+        task.wait(2)
     end
 end)
 
@@ -624,7 +624,7 @@ task.spawn(function()
     local monsters = {}
 
     while true do
-        task.wait(0.03)
+        task.wait(0.1)
 
         if pullEnabled and hrp then
             local now = tick()
