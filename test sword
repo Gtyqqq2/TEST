@@ -325,18 +325,20 @@ end
 updateHRP()
 player.CharacterAdded:Connect(updateHRP)
 
---================ MONSTER CACHE ( AURA + Monster PULL )=================--
+--================ MONSTER CACHE (OPTIMIZED) =================--
 local monsters = {}
 
 local function updateMonsters()
     local new = {}
 
-    for _, m in pairs(workspace:GetDescendants()) do
-        local h = m:FindFirstChildOfClass("Humanoid")
-        local r = m:FindFirstChild("HumanoidRootPart")
+    for _, m in ipairs(workspace:GetChildren()) do
+        if m:IsA("Model") then
+            local h = m:FindFirstChildOfClass("Humanoid")
+            local r = m:FindFirstChild("HumanoidRootPart")
 
-        if h and r then
-            table.insert(new, m)
+            if h and r and h.Health > 0 then
+                table.insert(new, m)
+            end
         end
     end
 
@@ -349,7 +351,7 @@ task.spawn(function()
         if enabled then
             updateMonsters()
         end
-        task.wait(0.7)
+        task.wait(2)
     end
 end)
 
@@ -360,7 +362,7 @@ task.spawn(function()
 
     while true do
         if enabled and hrp then
-            RunService.Heartbeat:Wait()
+            task.wait(0.03)
 
             local now = tick()
 
@@ -688,7 +690,7 @@ task.spawn(function()
                 lastUpdate = now
                 local newList = {}
 
-                for _, m in pairs(workspace:GetDescendants()) do
+                for _, m in ipairs(workspace:GetChildren()) do
                     if m:IsA("Model") and not Players:GetPlayerFromCharacter(m) then
                         local h = m:FindFirstChildOfClass("Humanoid")
                         local r = m:FindFirstChild("HumanoidRootPart")
