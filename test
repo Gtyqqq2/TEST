@@ -711,7 +711,7 @@ task.spawn(function()
 
                 -- หันเข้าหาผู้เล่น + หมุนเพิ่ม 25°
                 local baseCFrame = CFrame.new(targetPos, hrp.Position)
-                local offset = CFrame.Angles(0, math.rad(25), 0)
+                local offset = CFrame.Angles(0, math.rad(115), 0)
 
                 r.CFrame = baseCFrame * offset
 
