@@ -680,54 +680,21 @@ end)
 setPullDistance(20)
 
 --================ MONSTER PULL LOGIC =================--
-task.spawn(function()
-    local lastUpdate = 0
-    local monsters = {}
+for _, m in ipairs(monsters) do
+    local r = m:FindFirstChild("HumanoidRootPart")
 
-    while true do
-        task.wait(0.03)
+    if r then
+        local targetPos = (hrp.CFrame * CFrame.new(0, 0, -pullDistance)).Position
 
-        if pullEnabled and hrp then
-            local now = tick()
+        local baseCFrame = CFrame.new(targetPos, hrp.Position)
+        local offset = CFrame.Angles(0, math.rad(25), 0)
 
-            -- 🔹 อัปเดตรายชื่อมอนทุก 0.5 วินาที
-            if now - lastUpdate >= 0.5 then
-                lastUpdate = now
-                local newList = {}
+        r.CFrame = baseCFrame * offset
 
-                for _, m in pairs(workspace:GetDescendants()) do
-                    if m:IsA("Model") and not Players:GetPlayerFromCharacter(m) then
-                        local h = m:FindFirstChildOfClass("Humanoid")
-                        local r = m:FindFirstChild("HumanoidRootPart")
-
-                        if h and r and h.Health > 0 then
-                            if (hrp.Position - r.Position).Magnitude <= pullRange then
-                                table.insert(newList, r)
-                            end
-                        end
-                    end
-                end
-
-                monsters = newList
-            end
-
-            -- 🔥 ดึงมอน + หมุน 25 องศา
-            for _, r in ipairs(monsters) do
-
-                local targetPos = (hrp.CFrame * CFrame.new(0, 0, -pullDistance)).Position
-
-                -- หันเข้าหาผู้เล่น + หมุนเพิ่ม 25°
-                local baseCFrame = CFrame.new(targetPos, hrp.Position)
-                local offset = CFrame.Angles(0, math.rad(25), 0)
-
-                r.CFrame = baseCFrame * offset
-
-                r.AssemblyLinearVelocity = Vector3.zero
-                r.AssemblyAngularVelocity = Vector3.zero
-            end
-        end
+        r.AssemblyLinearVelocity = Vector3.zero
+        r.AssemblyAngularVelocity = Vector3.zero
     end
-end)
+end
 
 --================ AUTO SKILL GUI =================--
 local autoSkillLabel = Instance.new("TextLabel", pageAuto)
