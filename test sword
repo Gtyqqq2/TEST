@@ -328,23 +328,15 @@ player.CharacterAdded:Connect(updateHRP)
 --================ MONSTER CACHE ( AURA + Monster PULL )=================--
 local monsters = {}
 
-local SCAN_RANGE = 200
-
 local function updateMonsters()
     local new = {}
 
-    if not hrp then return end
-
-    local origin = hrp.Position
-
-    for _, m in ipairs(workspace:GetDescendants()) do
+    for _, m in pairs(workspace:GetDescendants()) do
         local h = m:FindFirstChildOfClass("Humanoid")
         local r = m:FindFirstChild("HumanoidRootPart")
 
-        if h and r and h.Health > 0 then
-            if (r.Position - origin).Magnitude <= SCAN_RANGE then
-                table.insert(new, m)
-            end
+        if h and r then
+            table.insert(new, m)
         end
     end
 
@@ -357,7 +349,7 @@ task.spawn(function()
         if enabled then
             updateMonsters()
         end
-        task.wait(1.5)
+        task.wait(0.7)
     end
 end)
 
