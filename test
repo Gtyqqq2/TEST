@@ -1181,14 +1181,11 @@ smoothToggle.MouseButton1Click:Connect(function()
     end
 end)
 
---================ ANTI DISCONNECT (UI + SYSTEM) =================--
-
 local antiEnabled = false
 
---================ UI =================--
 local antiFrame = Instance.new("Frame", pageSetting)
 antiFrame.Size = UDim2.new(0.9,0,0,40)
-antiFrame.Position = UDim2.new(0.05,0,0,110) -- 🔥 เลื่อนลงมา (ถัดจาก Smooth)
+antiFrame.Position = UDim2.new(0.05,0,0,110)
 antiFrame.BackgroundColor3 = Color3.fromRGB(50,50,50)
 Instance.new("UICorner", antiFrame)
 
@@ -1217,14 +1214,9 @@ antiToggle.MouseButton1Click:Connect(function()
     antiToggle.BackgroundColor3 = antiEnabled and Color3.fromRGB(255,0,0) or Color3.fromRGB(100,100,100)
 end)
 
---================ MAIN PROFILE + STAT FINAL FIXED =================--
-
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
---================ PROFILE =================--
-
--- 🏷 Profile (อยู่สูงขึ้น + มีระยะห่างดีขึ้น)
 local profileTitle = Instance.new("TextLabel", pageMain)
 profileTitle.Size = UDim2.new(0,85,0,20)
 profileTitle.Position = UDim2.new(0.03,0,0.16,0)
@@ -1235,25 +1227,20 @@ profileTitle.Font = Enum.Font.GothamBold
 profileTitle.TextSize = 14
 profileTitle.TextXAlignment = Enum.TextXAlignment.Center
 
--- 🧱 กรอบรูป (ห่างจากคำว่า Profile มากขึ้น)
 local profileFrame = Instance.new("Frame", pageMain)
 profileFrame.Size = UDim2.new(0,85,0,85)
 profileFrame.Position = UDim2.new(0.03,0,0.30,0)
 profileFrame.BackgroundColor3 = Color3.fromRGB(50,50,50)
 Instance.new("UICorner", profileFrame)
 
--- 🧑 Avatar
 local avatar = Instance.new("ImageLabel", profileFrame)
 avatar.Size = UDim2.new(0,75,0,75)
 avatar.Position = UDim2.new(0.5,-37,0.5,-37)
 avatar.BackgroundTransparency = 1
 avatar.Image = ("https://www.roblox.com/headshot-thumbnail/image?userId=%s&width=420&height=420&format=png"):format(player.UserId)
 
---================ RIGHT SIDE =================--
-
 local rightX = 0.38
 
--- 🧠 STAT TITLE
 local statTitle = Instance.new("TextLabel", pageMain)
 statTitle.Size = UDim2.new(0.55,0,0,30)
 statTitle.Position = UDim2.new(rightX,0,0,20)
@@ -1264,7 +1251,6 @@ statTitle.Font = Enum.Font.GothamBold
 statTitle.TextSize = 18
 statTitle.TextXAlignment = Enum.TextXAlignment.Center
 
--- ⏱ TIME
 local timeLabel = Instance.new("TextLabel", pageMain)
 timeLabel.Size = UDim2.new(0.55,0,0,25)
 timeLabel.Position = UDim2.new(rightX,0,0,55)
@@ -1275,7 +1261,6 @@ timeLabel.Font = Enum.Font.Gotham
 timeLabel.TextSize = 14
 timeLabel.TextXAlignment = Enum.TextXAlignment.Center
 
--- 🏷 SERVER TEXT
 local serverTitle = Instance.new("TextLabel", pageMain)
 serverTitle.Size = UDim2.new(0.55,0,0,20)
 serverTitle.Position = UDim2.new(rightX,0,0,80)
@@ -1286,11 +1271,10 @@ serverTitle.Font = Enum.Font.GothamBold
 serverTitle.TextSize = 13
 serverTitle.TextXAlignment = Enum.TextXAlignment.Center
 
--- 📋 SERVER URL (กลางจริงใต้ Server)
 local serverBox = Instance.new("TextBox", pageMain)
 serverBox.Size = UDim2.new(0.38,0,0,40)
 serverBox.Position = UDim2.new(0.66,0,0,105)
-serverBox.AnchorPoint = Vector2.new(0.5,0) -- 🔥 FIX กึ่งกลางจริง
+serverBox.AnchorPoint = Vector2.new(0.5,0)
 serverBox.BackgroundColor3 = Color3.fromRGB(40,40,40)
 serverBox.Text = game.JobId
 serverBox.TextColor3 = Color3.fromRGB(220,220,220)
@@ -1301,8 +1285,6 @@ serverBox.TextWrapped = true
 serverBox.TextXAlignment = Enum.TextXAlignment.Center
 serverBox.TextYAlignment = Enum.TextYAlignment.Center
 Instance.new("UICorner", serverBox)
-
---================ TIME SYSTEM =================--
 
 local startTime = tick()
 
@@ -1335,7 +1317,6 @@ task.spawn(function()
     end
 end)
 
---================ ICON =================--
 local iconGui = Instance.new("ScreenGui", game.CoreGui)
 local icon = Instance.new("ImageButton", iconGui)
 icon.Size = UDim2.new(0,80,0,40)
@@ -1399,8 +1380,6 @@ icon.MouseButton1Click:Connect(function()
     end
 end)
 
---================ FIX MENU =================--
-
 btnMain.MouseButton1Click:Connect(function()
     pageMain.Visible = true
     pageAura.Visible = false
@@ -1440,5 +1419,3 @@ btnSetting.MouseButton1Click:Connect(function()
     pageAuto.Visible = false
     pageSetting.Visible = true
 end)
-
-print("🌌 gtyqqq hub finish 🌌")
