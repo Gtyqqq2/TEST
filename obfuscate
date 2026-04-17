@@ -574,7 +574,7 @@ Instance.new("UICorner", distBox)
 local draggingDist = false
 
 local function setPullDistance(n)
-    n = math.clamp(math.floor(n),15,100) -- ปรับ range เป็น 15-100
+    n = math.clamp(math.floor(n),15,100)
     pullDistance = n
     distLabel.Text = "Distance: "..n
 
@@ -624,12 +624,12 @@ task.spawn(function()
     local monsters = {}
 
     while true do
-        task.wait(0.1)
+        task.wait(0.05)
 
         if pullEnabled and hrp then
             local now = tick()
 
-            if now - lastUpdate >= 2 then
+            if now - lastUpdate >= 0.75 then
                 lastUpdate = now
                 local newList = {}
 
