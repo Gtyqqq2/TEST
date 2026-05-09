@@ -1442,3 +1442,86 @@ btnSetting.MouseButton1Click:Connect(function()
     pageAuto.Visible = false
     pageSetting.Visible = true
 end)
+
+--================ TOP RIGHT SWITCH =================--
+
+local topSwitch = Instance.new("TextButton", frame)
+topSwitch.Size = UDim2.new(0,18,0,18)
+topSwitch.Position = UDim2.new(1,-28,0,6)
+topSwitch.Text = ""
+topSwitch.BackgroundColor3 = Color3.fromRGB(255,70,70)
+topSwitch.AutoButtonColor = false
+topSwitch.ZIndex = 10
+Instance.new("UICorner", topSwitch).CornerRadius = UDim.new(1,0)
+
+-- หน้า UI ชุดที่ 2
+local secondUI = Instance.new("Frame", mainGui)
+secondUI.Size = frame.Size
+secondUI.Position = frame.Position
+secondUI.BackgroundColor3 = Color3.fromRGB(30,30,30)
+secondUI.BackgroundTransparency = 0.1
+secondUI.Visible = false
+secondUI.Active = true
+secondUI.Draggable = true
+Instance.new("UICorner", secondUI).CornerRadius = UDim.new(0,16)
+
+local secondGrad = Instance.new("UIGradient", secondUI)
+secondGrad.Color = gradMain.Color
+secondGrad.Rotation = 45
+
+-- header หน้า 2
+local secondHeader = Instance.new("TextLabel", secondUI)
+secondHeader.Size = UDim2.new(1,0,0,30)
+secondHeader.BackgroundTransparency = 1
+secondHeader.Text = "👾 Abyss hub 2 👾"
+secondHeader.TextColor3 = Color3.fromRGB(255,255,255)
+secondHeader.Font = Enum.Font.GothamBold
+secondHeader.TextSize = 18
+
+-- ปุ่มบนขวาของหน้า 2
+local topSwitch2 = Instance.new("TextButton", secondUI)
+topSwitch2.Size = UDim2.new(0,18,0,18)
+topSwitch2.Position = UDim2.new(1,-28,0,6)
+topSwitch2.Text = ""
+topSwitch2.BackgroundColor3 = Color3.fromRGB(70,255,120)
+topSwitch2.AutoButtonColor = false
+topSwitch2.ZIndex = 10
+Instance.new("UICorner", topSwitch2).CornerRadius = UDim.new(1,0)
+
+-- sync ตำแหน่ง
+RunService.RenderStepped:Connect(function()
+    if frame.Visible then
+        secondUI.Position = frame.Position
+    elseif secondUI.Visible then
+        frame.Position = secondUI.Position
+    end
+end)
+
+-- switch function
+local usingSecond = false
+
+local function switchUI(state)
+    usingSecond = state
+
+    if usingSecond then
+        frame.Visible = false
+        secondUI.Visible = true
+
+        topSwitch.BackgroundColor3 = Color3.fromRGB(70,255,120)
+        topSwitch2.BackgroundColor3 = Color3.fromRGB(70,255,120)
+    else
+        frame.Visible = true
+        secondUI.Visible = false
+
+        topSwitch.BackgroundColor3 = Color3.fromRGB(255,70,70)
+        topSwitch2.BackgroundColor3 = Color3.fromRGB(255,70,70)
+    end
+end
+
+topSwitch.MouseButton1Click:Connect(function()
+    switchUI(true)
+end)
+
+topSwitch2.MouseButton1Click:Connect(function()
+    switchUI(false)
+end)
